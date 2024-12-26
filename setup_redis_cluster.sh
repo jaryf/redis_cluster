@@ -56,12 +56,21 @@ create_cluster() {
     redis-cli --cluster create $NODES --cluster-replicas 1 -a $PASSWORD
 }
 
+# 初始化所有操作的函数
+init_all() {
+    echo "初始化：生成配置文件、启动实例并创建集群..."
+    write_configs
+    start_redis
+    create_cluster
+}
+
 # 显示帮助信息的函数
 show_help() {
-    echo "使用方法：$0 {config|start|cluster|help}"
+    echo "使用方法：$0 {config|start|cluster|init|help}"
     echo "  config  - 生成所有Redis配置文件"
     echo "  start   - 启动所有Redis实例"
     echo "  cluster - 创建Redis集群"
+    echo "  init    - 执行所有操作（生成配置、启动实例、创建集群）"
     echo "  help    - 显示帮助信息"
 }
 
@@ -83,6 +92,10 @@ case $1 in
     cluster)
         echo "创建Redis集群..."
         create_cluster
+        ;;
+    init)
+        echo "执行所有操作..."
+        init_all
         ;;
     help)
         show_help
